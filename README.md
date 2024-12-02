@@ -32,6 +32,21 @@
 $ yarn install
 ```
 
+## Migrate
+```bash
+# run all migrate
+$ npx prisma migrate dev
+
+# Generate file migrate
+$ npx prisma migrate dev --name name-migrate
+
+# Generate Entites
+$ npx prisma generate
+
+# Watch db
+$ npx prisma studio
+```
+
 ## Running the app
 
 ```bash
@@ -44,7 +59,10 @@ $ yarn run start:dev
 # production mode
 $ yarn run start:prod
 ```
-
+## Format code
+```bash
+$ yarn format
+```
 ## Test
 
 ```bash
