@@ -29,39 +29,39 @@
 ## Installation
 
 ```bash
-$ yarn install
+yarn install
 ```
 
 ## Migrate
 ```bash
 # run all migrate
-$ npx prisma migrate dev
+npx prisma migrate dev
 
 # Generate file migrate
-$ npx prisma migrate dev --name name-migrate
+npx prisma migrate dev --name name-migrate
 
 # Generate Entites
-$ npx prisma generate
+npx prisma generate
 
 # Watch db
-$ npx prisma studio
+npx prisma studio
 ```
 
 ## Running the app
 
 ```bash
 # development
-$ yarn run start
+yarn run start
 
 # watch mode
-$ yarn run start:dev
+yarn run start:dev
 
 # production mode
-$ yarn run start:prod
+yarn run start:prod
 ```
 ## Format code
 ```bash
-$ yarn format
+yarn format
 ```
 
 ## Basic CMD
@@ -95,13 +95,13 @@ nest g decorator <decorator-name>
 
 ```bash
 # unit tests
-$ yarn run test
+yarn run test
 
 # e2e tests
-$ yarn run test:e2e
+yarn run test:e2e
 
 # test coverage
-$ yarn run test:cov
+yarn run test:cov
 ```
 
 ## Support
