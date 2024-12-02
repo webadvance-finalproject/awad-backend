@@ -63,6 +63,34 @@ $ yarn run start:prod
 ```bash
 $ yarn format
 ```
+
+## Basic CMD
+```bash
+# Create Module
+nest g module <module-name>
+
+# Create Controller
+nest g controller <module-name> # or nest g controller users/profile 
+
+# Create Service
+nest g service <module-name> # or nest g s users/auth 
+
+# Create Provider
+nest g provider <provider-name>
+
+# Create Guard
+nest g guard <guard-name>
+
+# Create Interceptor
+nest g interceptor <interceptor-name>
+
+# Create Pipe
+nest g pipe <pipe-name>
+
+# Create Decorator
+nest g decorator <decorator-name>
+
+```
 ## Test
 
 ```bash
