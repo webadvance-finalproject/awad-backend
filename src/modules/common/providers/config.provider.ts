@@ -9,6 +9,7 @@ export const configProvider = {
     const validationSchema = Joi.object<Config>().unknown().keys({
       API_PORT: Joi.number().required(),
       JWT_SECRET: Joi.string().required(),
+      API_KEY: Joi.string().required(),
     });
 
     const result = validationSchema.validate(env);
