@@ -29,33 +29,79 @@
 ## Installation
 
 ```bash
-$ yarn install
+yarn install
+```
+
+## Migrate
+```bash
+# run all migrate
+npx prisma migrate dev
+
+# Generate file migrate
+npx prisma migrate dev --name name-migrate
+
+# Generate Entites
+npx prisma generate
+
+# Watch db
+npx prisma studio
 ```
 
 ## Running the app
 
 ```bash
 # development
-$ yarn run start
+yarn run start
 
 # watch mode
-$ yarn run start:dev
+yarn run start:dev
 
 # production mode
-$ yarn run start:prod
+yarn run start:prod
+```
+## Format code
+```bash
+yarn format
 ```
 
+## Basic CMD
+```bash
+# Create Module
+nest g module <module-name>
+
+# Create Controller
+nest g controller <module-name> # or nest g controller users/profile 
+
+# Create Service
+nest g service <module-name> # or nest g s users/auth 
+
+# Create Provider
+nest g provider <provider-name>
+
+# Create Guard
+nest g guard <guard-name>
+
+# Create Interceptor
+nest g interceptor <interceptor-name>
+
+# Create Pipe
+nest g pipe <pipe-name>
+
+# Create Decorator
+nest g decorator <decorator-name>
+
+```
 ## Test
 
 ```bash
 # unit tests
-$ yarn run test
+yarn run test
 
 # e2e tests
-$ yarn run test:e2e
+yarn run test:e2e
 
 # test coverage
-$ yarn run test:cov
+yarn run test:cov
 ```
 
 ## Support
