@@ -57,3 +57,22 @@ export async function fetchMovieFromExternalAPI(options: {
     throw error;
   }
 }
+
+export async function searchMovieFromExternalAPI(options: {
+  token: string,
+  keyword: string,
+  page: number
+}) {
+  try {
+    const response = await axios.get(`https://api.themoviedb.org/3/search/movie?query=${options.keyword}&page=${options.page}`,
+      {
+        headers: {
+          Authorization: `Bearer ${options.token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}

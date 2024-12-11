@@ -34,4 +34,13 @@ export class MovieService {
     });
     return movie;
   }
+
+  public async searchMovie(keyword: string, page: number) {
+    const movies = await MovieUtils.searchMovieFromExternalAPI({
+      token: this.configService.API_KEY,
+      keyword,
+      page
+    })
+    return movies;
+  }
 }
