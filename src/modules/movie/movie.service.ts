@@ -11,11 +11,36 @@ export class MovieService {
    * @returns true
    */
   constructor(@Inject('CONFIG') private readonly configService: Config) {}
+  public async getTrendingMoviesByDay(page: number): Promise<boolean> {
+    const movies = await MovieUtils.fetchTrendingMoviesByDayFromExternalAPI({
+      token: this.configService.API_KEY,
+      page,
+    });
+    return movies;
+  }
+
+  public async getTrendingMoviesByWeek(page: number): Promise<boolean> {
+    const movies = await MovieUtils.fetchTrendingMoviesByWeekFromExternalAPI({
+      token: this.configService.API_KEY,
+      page,
+    });
+    return movies;
+  }
+
   public async getMovieDetail(movieID: GetMovieDetailDto): Promise<boolean> {
     const movie = await MovieUtils.fetchMovieFromExternalAPI({
       token: this.configService.API_KEY,
       movieID,
     });
     return movie;
+  }
+
+  public async searchMovie(keyword: string, page: number) {
+    const movies = await MovieUtils.searchMovieFromExternalAPI({
+      token: this.configService.API_KEY,
+      keyword,
+      page
+    })
+    return movies;
   }
 }
