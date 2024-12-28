@@ -69,7 +69,7 @@ class CreditCast {
   @Prop()
   original_name!: string;
 
-  @Prop('float')
+  @Prop({ type: Number })
   popularity!: number;
 
   @Prop({ nullable: true })
@@ -107,7 +107,7 @@ class CreditCrew {
   @Prop()
   original_name!: string;
 
-  @Prop('float')
+  @Prop({ type: Number })
   popularity!: number;
 
   @Prop({ nullable: true })
@@ -127,14 +127,14 @@ class Credits {
   @Prop()
   id!: number;
 
-  @Prop(() => CreditCast)
+  @Prop(() => [CreditCast])
   cast!: CreditCast[];
 
-  @Prop(() => CreditCrew)
+  @Prop(() => [CreditCrew])
   crew!: CreditCrew[];
 }
 
-@Schema()
+@Schema({ collection: 'movies' })
 export class Movie {
   @Prop({ unique: true })
   tmdb_id!: number;
@@ -151,10 +151,10 @@ export class Movie {
   @Prop()
   budget!: number;
 
-  @Prop('simple-array')
+  @Prop({ type: [String] })
   categories!: string[];
 
-  @Prop(() => Genre)
+  @Prop(() => [Genre])
   genres!: Genre[];
 
   @Prop()
@@ -163,7 +163,7 @@ export class Movie {
   @Prop()
   imdb_id!: string;
 
-  @Prop('simple-array')
+  @Prop({ type: [String] })
   origin_country!: string[];
 
   @Prop()
@@ -172,22 +172,22 @@ export class Movie {
   @Prop()
   original_title!: string;
 
-  @Prop('text')
+  @Prop({ type: String })
   overview!: string;
 
-  @Prop('float')
+  @Prop({ type: Number })
   popularity!: number;
 
   @Prop()
   poster_path!: string;
 
-  @Prop(() => ProductionCompany)
+  @Prop(() => [ProductionCompany])
   production_companies!: ProductionCompany[];
 
-  @Prop(() => ProductionCountry)
+  @Prop(() => [ProductionCountry])
   production_countries!: ProductionCountry[];
 
-  @Prop('date')
+  @Prop({ type: Date })
   release_date!: string;
 
   @Prop()
@@ -196,7 +196,7 @@ export class Movie {
   @Prop()
   runtime!: number;
 
-  @Prop(() => SpokenLanguage)
+  @Prop(() => [SpokenLanguage])
   spoken_languages!: SpokenLanguage[];
 
   @Prop()
@@ -211,7 +211,7 @@ export class Movie {
   @Prop()
   video!: boolean;
 
-  @Prop('float')
+  @Prop({ type: Number })
   vote_average!: number;
 
   @Prop()

@@ -1,7 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { GetMovieDetailDto } from './dto';
 import * as MovieUtils from './utils';
-import { Config } from '../common/model';
+import { Config, Movie, People } from '../common/model';
+import { MovieRepository } from './movie.repository';
 
 @Injectable()
 export class MovieService {
@@ -10,7 +11,10 @@ export class MovieService {
    *
    * @returns true
    */
-  constructor(@Inject('CONFIG') private readonly configService: Config) {}
+  constructor(
+    @Inject('CONFIG') private readonly configService: Config,
+    private readonly movieRepository: MovieRepository,
+  ) {}
   public async getTrendingMoviesByDay(page: number): Promise<boolean> {
     const movies = await MovieUtils.fetchTrendingMoviesByDayFromExternalAPI({
       token: this.configService.API_KEY,
@@ -27,11 +31,8 @@ export class MovieService {
     return movies;
   }
 
-  public async getMovieDetail(movieID: GetMovieDetailDto): Promise<boolean> {
-    const movie = await MovieUtils.fetchMovieFromExternalAPI({
-      token: this.configService.API_KEY,
-      movieID,
-    });
+  public async getMovieDetail(movieID: GetMovieDetailDto): Promise<Movie> {
+    const movie = await this.movieRepository.findById(movieID);
     return movie;
   }
 
@@ -39,8 +40,18 @@ export class MovieService {
     const movies = await MovieUtils.searchMovieFromExternalAPI({
       token: this.configService.API_KEY,
       keyword,
-      page
-    })
+      page,
+    });
     return movies;
+  }
+
+  public async getMovieCast(movieID: GetMovieDetailDto): Promise<Movie> {
+    const movie = await this.movieRepository.findById(movieID);
+    return movie;
+  }
+
+  public async getActorDetail(actorID: string): Promise<People> {
+    const actor = await this.movieRepository.findActorById(actorID);
+    return actor;
   }
 }

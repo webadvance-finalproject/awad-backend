@@ -3,52 +3,52 @@ import { HydratedDocument } from 'mongoose';
 
 import { Credits } from './movie.schema';
 
-@Schema()
+@Schema({ collection: 'people' })
 export class People {
-    @Prop({ unique: true})
-    tmdb_id!: number;
+  @Prop({ unique: true })
+  tmdb_id!: number;
 
-    @Prop()
-    adult!: boolean;
+  @Prop()
+  adult!: boolean;
 
-    @Prop('simple-array')
-    also_known_as!: string[];
+  @Prop({ type: [String] })
+  also_known_as!: string[];
 
-    @Prop('text')
-    biography!: string;
+  @Prop({ type: String })
+  biography!: string;
 
-    @Prop('date')
-    birthday!: string;
+  @Prop({ type: Date })
+  birthday!: string;
 
-    @Prop({ nullable: true })
-    deathday!: string;
+  @Prop({ type: Date, nullable: true })
+  deathday!: string;
 
-    @Prop()
-    gender!: number;
+  @Prop()
+  gender!: number;
 
-    @Prop()
-    homepage!: string;
+  @Prop()
+  homepage!: string;
 
-    @Prop()
-    imdb_id!: string;
+  @Prop()
+  imdb_id!: string;
 
-    @Prop()
-    known_for_department!: string;
+  @Prop()
+  known_for_department!: string;
 
-    @Prop()
-    name!: string;
+  @Prop()
+  name!: string;
 
-    @Prop()
-    place_of_birth!: string;
+  @Prop()
+  place_of_birth!: string;
 
-    @Prop('float')
-    popularity!: number;
+  @Prop({ type: Number })
+  popularity!: number;
 
-    @Prop()
-    profile_path!: string;
+  @Prop()
+  profile_path!: string;
 
-    @Prop(() => Credits)
-    movie_credits!: Credits;
+  @Prop(() => Credits)
+  movie_credits!: Credits;
 }
 
 export const PeopleSchema = SchemaFactory.createForClass(People);
