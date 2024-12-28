@@ -9,7 +9,7 @@ import {
   Param,
   HttpException,
   Query,
-  ParseIntPipe
+  ParseIntPipe,
 } from '@nestjs/common';
 import { GetMovieDetailDto } from './dto';
 import { MovieService } from './movie.service';
@@ -22,7 +22,10 @@ export class MovieController {
   @Get('search')
   // @UseGuards(AuthFirebaseGuard)
   @HttpCode(HttpStatus.OK)
-  async searchMovie(@Query('keyword') keyword: string, @Query('page', ParseIntPipe) page: number = 1) {
+  async searchMovie(
+    @Query('keyword') keyword: string,
+    @Query('page', ParseIntPipe) page: number = 1,
+  ) {
     try {
       return await this.movieService.searchMovie(keyword, page);
     } catch (error) {
@@ -56,6 +59,26 @@ export class MovieController {
   async getTrendingMoviesByWeek(@Query('page') page?: number) {
     try {
       return await this.movieService.getTrendingMoviesByWeek(page);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @Get(':id/cast')
+  @HttpCode(HttpStatus.OK) // 200
+  async getMovieCast(@Param('id') movieID: GetMovieDetailDto) {
+    try {
+      return await this.movieService.getMovieCast(movieID);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @Get('actor/:id')
+  @HttpCode(HttpStatus.OK)
+  async getActorDetail(@Param('id') actorID: string) {
+    try {
+      return await this.movieService.getActorDetail(actorID);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }

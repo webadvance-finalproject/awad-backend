@@ -3,15 +3,14 @@ import { HydratedDocument } from 'mongoose';
 
 import { Movie } from './movie.schema';
 
-
-@Schema({ collection: 'Movies_genres'})
+@Schema({ collection: 'movies_genres' })
 export class Genre {
   @Prop()
   id!: string;
-  
+
   @Prop()
   name!: string;
-  
+
   @Prop(() => [Movie])
   movies!: Movie[];
 }
