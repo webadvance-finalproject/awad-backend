@@ -56,4 +56,39 @@ export class UserRepository {
     });
     return !!favorite;
   }
+
+  async addWatchlist({ userID, movieID }: { userID: string; movieID: string }) {
+    const watchlist = await this.watchlistModel.findOne({ userID });
+    const movie = await this.movieModel.findOne({ id: Number(movieID) });
+    if (!movie) {
+      throw new Error('Movie not found');
+    }
+    if (!watchlist && movie) {
+      return await this.watchlistModel.create({ userID, movies: [movie] });
+    }
+    watchlist.movies.push(movie);
+    return await watchlist.save();
+  }
+
+  async removeWatchlist({
+    movieID,
+    userID,
+  }: {
+    movieID: string;
+    userID: string;
+  }) {
+    return await this.watchlistModel.findOneAndUpdate(
+      { userID },
+      { $pull: { movies: { tmdb_id: Number(movieID) } } },
+      { new: true },
+    );
+  }
+
+  async getWatchlist({ movieID, userID }: { movieID: string; userID: string }) {
+    const watchlist = await this.watchlistModel.findOne({
+      userID,
+      'movies.tmdb_id': Number(movieID),
+    });
+    return !!watchlist;
+  }
 }

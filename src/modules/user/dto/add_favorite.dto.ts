@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsString } from 'class-validator';
-export class FavoriteDto {
+export class UserMovieDto {
   @IsString()
   @IsNotEmpty()
   movieID: string;
