@@ -15,7 +15,7 @@ import {
 import { AuthFirebaseGuard } from '../common/guards';
 import { UserService } from './user.service';
 import { UserDecorator } from './decorators';
-import { FavoriteDto } from './dto';
+import { UserMovieDto } from './dto';
 @Controller('user')
 @UseGuards(AuthFirebaseGuard)
 export class UserController {
@@ -28,7 +28,7 @@ export class UserController {
     @UserDecorator('uid') userID: string,
   ) {
     try {
-      const addFavoriteData = new FavoriteDto();
+      const addFavoriteData = new UserMovieDto();
       addFavoriteData.movieID = movieID.toString();
       addFavoriteData.userID = userID;
       const createFavorite =
@@ -50,7 +50,7 @@ export class UserController {
     @UserDecorator('uid') userID: string,
   ) {
     try {
-      const removeFavoriteData = new FavoriteDto();
+      const removeFavoriteData = new UserMovieDto();
       removeFavoriteData.movieID = movieID.toString();
       removeFavoriteData.userID = userID;
       const removeFavorite =
@@ -80,6 +80,71 @@ export class UserController {
         statusCode: HttpStatus.OK,
         message: 'Favorite status retrieved successfully',
         data: { isFavorite },
+      };
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @Post('/watchlist')
+  @HttpCode(HttpStatus.CREATED)
+  async addWatchlist(
+    @Body('movieID') movieID: string | number,
+    @UserDecorator('uid') userID: string,
+  ) {
+    try {
+      const addWatchlistData = new UserMovieDto();
+      addWatchlistData.movieID = movieID.toString();
+      addWatchlistData.userID = userID;
+      const createWatchlist =
+        await this.userService.addWatchlist(addWatchlistData);
+      return {
+        statusCode: HttpStatus.CREATED,
+        message: 'Create Watchlist successfully',
+        data: { createWatchlist },
+      };
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @Delete('/watchlist/:movieID')
+  @HttpCode(HttpStatus.OK)
+  async removeWatchlist(
+    @Param('movieID') movieID: string | number,
+    @UserDecorator('uid') userID: string,
+  ) {
+    try {
+      const removeWatchlistData = new UserMovieDto();
+      removeWatchlistData.movieID = movieID.toString();
+      removeWatchlistData.userID = userID;
+      const removeWatchlist =
+        await this.userService.removeWatchlist(removeWatchlistData);
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Remove Watchlist successfully',
+        data: { removeWatchlist },
+      };
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @Get('/watchlist/:movieID')
+  @HttpCode(HttpStatus.OK)
+  async getWatchlist(
+    @Param('movieID') movieID: string,
+    @UserDecorator('uid') userID: string,
+  ) {
+    try {
+      const isWatchlist = await this.userService.getWatchlist({
+        movieID,
+        userID,
+      });
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Watchlist status retrieved successfully',
+        data: { isWatchlist },
       };
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);

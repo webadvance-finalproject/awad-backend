@@ -1,1 +1,1 @@
-export { FavoriteDto } from './add_favorite.dto';
+export { UserMovieDto } from './add_favorite.dto';
