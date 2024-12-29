@@ -17,4 +17,12 @@ export class MovieRepository {
   async findActorById(actorID: string): Promise<People> {
     return await this.peopleModel.findOne({ id: Number(actorID) }).exec();
   }
+
+  async findByKeywordWithPagination(keyword: string, page: number, limit: number): Promise<Movie[]> {
+    const skip = (page - 1) * limit;
+    return await this.movieModel.find({ title: { $regex: keyword, $options: 'i' } })
+      .skip(skip)
+      .limit(limit)
+      .exec();
+  }
 }

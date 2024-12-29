@@ -36,12 +36,8 @@ export class MovieService {
     return movie;
   }
 
-  public async searchMovie(keyword: string, page: number) {
-    const movies = await MovieUtils.searchMovieFromExternalAPI({
-      token: this.configService.API_KEY,
-      keyword,
-      page,
-    });
+  public async searchMovie(keyword: string, page: number, limit: number = 20) {
+    const movies = await this.movieRepository.findByKeywordWithPagination(keyword, page, limit);
     return movies;
   }
 

@@ -27,7 +27,11 @@ export class MovieController {
     @Query('page', ParseIntPipe) page: number = 1,
   ) {
     try {
-      return await this.movieService.searchMovie(keyword, page);
+      const rs = await this.movieService.searchMovie(keyword, page);
+      return {
+        page,
+        results: rs,
+      }
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
