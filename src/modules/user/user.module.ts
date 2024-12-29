@@ -10,8 +10,10 @@ import {
   FavoriteSchema,
   List,
   ListSchema,
+  Movie,
   Watchlist,
   WatchlistSchema,
+  MovieSchema,
 } from '../common/model';
 
 @Module({
@@ -21,6 +23,7 @@ import {
       { name: Favorite.name, schema: FavoriteSchema },
       { name: Watchlist.name, schema: WatchlistSchema },
       { name: List.name, schema: ListSchema },
+      { name: Movie.name, schema: MovieSchema },
     ]),
   ],
   providers: [UserService, UserRepository],
