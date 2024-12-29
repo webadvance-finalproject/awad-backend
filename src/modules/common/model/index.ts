@@ -10,3 +10,6 @@ export {
   MovieTrendingWeekSchema,
 } from './movie-trending-week.schema';
 export { PeopleDocument, PeopleSchema, People } from './people.schema';
+export { Watchlist, WatchlistSchema } from './watchlist.schema';
+export { Favorite, FavoriteSchema } from './favorites.schema';
+export { List, ListSchema } from './list.schema';
