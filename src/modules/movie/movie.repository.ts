@@ -25,4 +25,12 @@ export class MovieRepository {
       .limit(limit)
       .exec();
   }
+
+  async findActorByKeywordWithPagination(keyword: string, page: number, limit: number): Promise<People[]> {
+    const skip = (page - 1) * limit;
+    return await this.peopleModel.find({ name: { $regex: keyword, $options: 'i' } })
+      .skip(skip)
+      .limit(limit)
+      .exec();
+  }
 }

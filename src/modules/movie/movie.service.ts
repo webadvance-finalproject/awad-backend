@@ -36,7 +36,7 @@ export class MovieService {
     return movie;
   }
 
-  public async searchMovie(keyword: string, page: number, limit: number = 20) {
+  public async searchMovie(keyword: string, page: number, limit: number) {
     const movies = await this.movieRepository.findByKeywordWithPagination(keyword, page, limit);
     return movies;
   }
@@ -44,6 +44,11 @@ export class MovieService {
   public async getMovieCast(movieID: GetMovieDetailDto): Promise<Movie> {
     const movie = await this.movieRepository.findById(movieID);
     return movie;
+  }
+
+  public async searchActor(keyword: string, page: number, limit: number) {
+    const actors = await this.movieRepository.findActorByKeywordWithPagination(keyword, page, limit);
+    return actors;
   }
 
   public async getActorDetail(actorID: string): Promise<People> {
