@@ -8,12 +8,12 @@ import { MongooseModule } from '@nestjs/mongoose';
 import {
   Favorite,
   FavoriteSchema,
-  List,
-  ListSchema,
   Movie,
   Watchlist,
   WatchlistSchema,
   MovieSchema,
+  Rating,
+  RatingSchema,
 } from '../common/model';
 
 @Module({
@@ -22,8 +22,8 @@ import {
     MongooseModule.forFeature([
       { name: Favorite.name, schema: FavoriteSchema },
       { name: Watchlist.name, schema: WatchlistSchema },
-      { name: List.name, schema: ListSchema },
       { name: Movie.name, schema: MovieSchema },
+      { name: Rating.name, schema: RatingSchema },
     ]),
   ],
   providers: [UserService, UserRepository],
