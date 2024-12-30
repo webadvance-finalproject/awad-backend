@@ -15,8 +15,9 @@ import {
 import { AuthFirebaseGuard } from '../common/guards';
 import { UserService } from './user.service';
 import { UserDecorator } from './decorators';
-import { UserMovieDto } from './dto';
+import { UserDto, UserMovieDto, UserReviewDto } from './dto';
 import { UserRatingDto } from './dto/user_rating.dto';
+import { Public } from '../common/decorators';
 @Controller('user')
 @UseGuards(AuthFirebaseGuard)
 export class UserController {
@@ -182,6 +183,41 @@ export class UserController {
         statusCode: HttpStatus.OK,
         message: 'Rating retrieved successfully',
         data: { rating },
+      };
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @Post('/review')
+  @HttpCode(HttpStatus.CREATED)
+  async addReview(
+    @Body() review: UserReviewDto,
+    @UserDecorator() user: UserDto,
+  ) {
+    try {
+      const createReview = await this.userService.addReview(user, review);
+      return {
+        statusCode: HttpStatus.CREATED,
+        message: 'Create Review successfully',
+        data: { createReview },
+      };
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @Public()
+  @Get('/review/:movieID')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards()
+  async getReview(@Param('movieID') movieID: string) {
+    try {
+      const review = await this.userService.getReviews({ movieID });
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Review retrieved successfully',
+        data: { review },
       };
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);

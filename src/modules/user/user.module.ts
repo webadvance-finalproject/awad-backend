@@ -14,6 +14,8 @@ import {
   MovieSchema,
   Rating,
   RatingSchema,
+  Review,
+  ReviewSchema,
 } from '../common/model';
 
 @Module({
@@ -24,6 +26,7 @@ import {
       { name: Watchlist.name, schema: WatchlistSchema },
       { name: Movie.name, schema: MovieSchema },
       { name: Rating.name, schema: RatingSchema },
+      { name: Review.name, schema: ReviewSchema },
     ]),
   ],
   providers: [UserService, UserRepository],

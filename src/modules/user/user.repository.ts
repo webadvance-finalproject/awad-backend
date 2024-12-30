@@ -10,7 +10,10 @@ import {
   MovieDocument,
   Rating,
   RatingDocument,
+  Review,
+  ReviewDocument,
 } from '../common/model';
+import { UserDto, UserReviewDto } from './dto';
 
 @Injectable()
 export class UserRepository {
@@ -20,6 +23,7 @@ export class UserRepository {
     private watchlistModel: Model<WatchlistDocument>,
     @InjectModel(Movie.name) private movieModel: Model<MovieDocument>,
     @InjectModel(Rating.name) private ratingModel: Model<RatingDocument>,
+    @InjectModel(Review.name) private reviewModel: Model<ReviewDocument>,
   ) {}
 
   async addFavorite({ userID, movieID }: { userID: string; movieID: string }) {
@@ -138,8 +142,15 @@ export class UserRepository {
   }) {
     const userRating = await this.ratingModel.findOne({ userID });
     const movie = await this.movieModel.findOne({ id: Number(movieID) });
-    if (!userRating) {
+    if (!movie) {
       throw new Error('Rating not found');
+    }
+    if (!userRating) {
+      movie.vote_average =
+        (Number(movie.vote_average) * 10 * Number(movie.vote_count) + rating) /
+        ((Number(movie.vote_count) + 1) * 10);
+      movie.vote_count = Number(movie.vote_count) + 1;
+      return await movie.save();
     }
     const existingRatingIndex = userRating.ratings.findIndex(
       (r) => r.movieID === Number(movieID),
@@ -172,5 +183,37 @@ export class UserRepository {
       (r) => r.movieID === Number(movieID),
     );
     return rating;
+  }
+
+  async addReview(user: UserDto, review: UserReviewDto) {
+    const userReview = await this.reviewModel.findOne({ userID: user.uid });
+    const movie = await this.movieModel.findOne({ id: Number(review.movieID) });
+    if (!movie) {
+      throw new Error('Movie not found');
+    }
+    if (!userReview && movie) {
+      return await this.reviewModel.create({
+        userID: user.uid,
+        reviews: [
+          { movieID: movie.tmdb_id, review: review.review, name: user.name },
+        ],
+      });
+    }
+    userReview.reviews.push({
+      movieID: movie.tmdb_id,
+      review: review.review,
+      name: user.name,
+    });
+    return await userReview.save();
+  }
+
+  async getReviews({ movieID }: { movieID: string }) {
+    const reviews = await this.reviewModel.find({
+      'reviews.movieID': Number(movieID),
+    });
+    const movieReviews = reviews.flatMap((userReview) =>
+      userReview.reviews.filter((review) => review.movieID === Number(movieID)),
+    );
+    return movieReviews;
   }
 }

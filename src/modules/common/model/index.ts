@@ -1,4 +1,3 @@
-import { Rating } from './rating.schema';
 export { Config } from './config';
 export { MovieDocument, MovieSchema, Movie } from './movie.schema';
 export { GenreSchema, GenreDocument } from './movie-genre.schema';
@@ -19,3 +18,4 @@ export {
 export { Favorite, FavoriteSchema, FavoriteDocument } from './favorites.schema';
 
 export { Rating, RatingSchema, RatingDocument } from './rating.schema';
+export { Review, ReviewSchema, ReviewDocument } from './reviews.schema';

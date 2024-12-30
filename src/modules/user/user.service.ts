@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UserRepository } from './user.repository';
-import { UserMovieDto } from './dto';
+import { UserDto, UserMovieDto, UserReviewDto } from './dto';
 import { UserRatingDto } from './dto/user_rating.dto';
 @Injectable()
 export class UserService {
@@ -54,5 +54,13 @@ export class UserService {
 
   async getRating({ movieID, userID }: { movieID: string; userID: string }) {
     return await this.userRepository.getRating({ movieID, userID });
+  }
+
+  async addReview(user: UserDto, review: UserReviewDto) {
+    return await this.userRepository.addReview(user, review);
+  }
+
+  async getReviews({ movieID }: { movieID: string }) {
+    return await this.userRepository.getReviews({ movieID });
   }
 }
