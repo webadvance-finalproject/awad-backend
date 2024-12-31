@@ -187,7 +187,7 @@ export class Movie {
   @Prop(() => [ProductionCountry])
   production_countries!: ProductionCountry[];
 
-  @Prop({ type: Date })
+  @Prop()
   release_date!: string;
 
   @Prop()

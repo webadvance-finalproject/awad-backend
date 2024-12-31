@@ -1,6 +1,6 @@
 export { Config } from './config';
 export { MovieDocument, MovieSchema, Movie } from './movie.schema';
-export { GenreSchema, GenreDocument } from './movie-genre.schema';
+export { GenreSchema, GenreDocument, Genre } from './movie-genre.schema';
 export {
   MovieTrendingDayDocument,
   MovieTrendingDaySchema,

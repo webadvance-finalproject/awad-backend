@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Movie, People } from '../common/model';
+import { Genre, Movie, People } from '../common/model';
 import { GetMovieDetailDto } from './dto';
 
 @Injectable()
@@ -9,6 +9,7 @@ export class MovieRepository {
   constructor(
     @InjectModel(Movie.name) private movieModel: Model<Movie>,
     @InjectModel(People.name) private peopleModel: Model<People>,
+    @InjectModel(Genre.name) private genreModel: Model<Genre>,
   ) {}
 
   async findById(movieID: GetMovieDetailDto): Promise<Movie> {
@@ -16,6 +17,57 @@ export class MovieRepository {
   }
   async findActorById(actorID: string): Promise<People> {
     return await this.peopleModel.findOne({ id: Number(actorID) }).exec();
+  }
+
+  async searchWithFilter(
+    keyword: string,
+    actors: string[],
+    genres: string[],
+    minRating: number,
+    maxRating: number,
+    minYear: number,
+    page: number,
+    limit: number,
+  ): Promise<{ results: Movie[], total_pages: number }> {
+    if (!minRating) {
+      minRating = 0
+    }
+
+    if (!maxRating) {
+      maxRating = 10
+    }
+
+    if (!minYear) {
+      minYear = 1000
+    }
+
+    const filter: any = {
+      vote_average: { $gte: minRating, $lte: maxRating },
+      release_date: { $gte: `${minYear}-01-01` },
+    };
+
+    if (keyword) {
+      filter.title = { $regex: keyword, $options: 'i' };
+    }
+
+    if (actors.length > 0) {
+      filter['credits.cast.id'] = { $in: actors.map(id => Number(id)) };
+    }
+
+    if (genres.length > 0) {
+      filter['genres.id'] = { $in: genres.map(id => Number(id)) };
+    }
+
+    const totalCount = await this.movieModel.countDocuments(filter).exec();
+    const totalPages = Math.ceil(totalCount / limit);
+
+    const skip = (page - 1) * limit;
+    const results = await this.movieModel.find(filter)
+      .skip(skip)
+      .limit(limit)
+      .exec();
+
+    return { results, total_pages: totalPages };
   }
 
   async findByKeywordWithPagination(keyword: string, page: number, limit: number): Promise<Movie[]> {
@@ -32,5 +84,17 @@ export class MovieRepository {
       .skip(skip)
       .limit(limit)
       .exec();
+  }
+
+  async findActorsByIDs(actorIDs: string[]): Promise<People[]> {
+    return await this.peopleModel.find({ id: { $in: actorIDs.map(id => Number(id)) } }).exec();
+  }
+
+  async getAllGenre(): Promise<Genre[]> {
+    return await this.genreModel.find().exec();
+  }
+
+  async findGenresByManyID(genreIDs: string[]): Promise<Genre[]> {
+    return await this.genreModel.find({ id: { $in: genreIDs.map(id => Number(id)) } }).exec();
   }
 }
