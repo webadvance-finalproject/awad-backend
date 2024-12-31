@@ -6,7 +6,7 @@ import { Movie } from './movie.schema';
 @Schema({ collection: 'movies_genres' })
 export class Genre {
   @Prop()
-  id!: string;
+  id!: number;
 
   @Prop()
   name!: string;

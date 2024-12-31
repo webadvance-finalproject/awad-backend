@@ -8,8 +8,6 @@ import {
   Get,
   Param,
   HttpException,
-  Query,
-  ParseIntPipe,
   Delete,
 } from '@nestjs/common';
 import { AuthFirebaseGuard } from '../common/guards';
@@ -218,6 +216,41 @@ export class UserController {
         statusCode: HttpStatus.OK,
         message: 'Review retrieved successfully',
         data: { review },
+      };
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+  @Public()
+  @Get('/similar/:movieID')
+  @HttpCode(HttpStatus.OK)
+  async getSimilarMovies(@Param('movieID') movieID: string) {
+    try {
+      const similarMovies = await this.userService.getSimilarMovies({
+        movieID,
+      });
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Similar movies retrieved successfully',
+        data: { similarMovies },
+      };
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @Get('/similar')
+  @HttpCode(HttpStatus.OK)
+  async getSimilarMoviesBySearchHistory(@UserDecorator('uid') userID: string) {
+    try {
+      const similarMovies =
+        await this.userService.getSimilarMoviesBySearchHistory({
+          userID,
+        });
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Similar movies retrieved successfully',
+        data: { similarMovies },
       };
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);

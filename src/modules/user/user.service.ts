@@ -63,4 +63,14 @@ export class UserService {
   async getReviews({ movieID }: { movieID: string }) {
     return await this.userRepository.getReviews({ movieID });
   }
+
+  async getSimilarMovies({ movieID }: { movieID: string }) {
+    return await this.userRepository.getSimilarMovies({ movieID });
+  }
+
+  async getSimilarMoviesBySearchHistory({ userID }: { userID: string }) {
+    return await this.userRepository.getSimilarMoviesBySearchHistory({
+      userID,
+    });
+  }
 }

@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 import { Schema as MongooseSchema } from 'mongoose';
 import { Movie } from './movie.schema';
-import { SearchHistory } from './search_history.schem';
+import { SearchHistory } from './search_history.schema';
 
 @Schema({ collection: 'search_clicks' })
 export class SearchClick {

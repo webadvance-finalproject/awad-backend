@@ -12,9 +12,10 @@ import {
   RatingDocument,
   Review,
   ReviewDocument,
+  SearchHistory,
+  SearchHistoryDocument,
 } from '../common/model';
 import { UserDto, UserReviewDto } from './dto';
-
 @Injectable()
 export class UserRepository {
   constructor(
@@ -24,6 +25,8 @@ export class UserRepository {
     @InjectModel(Movie.name) private movieModel: Model<MovieDocument>,
     @InjectModel(Rating.name) private ratingModel: Model<RatingDocument>,
     @InjectModel(Review.name) private reviewModel: Model<ReviewDocument>,
+    @InjectModel(SearchHistory.name)
+    private searchHistoryModel: Model<SearchHistoryDocument>,
   ) {}
 
   async addFavorite({ userID, movieID }: { userID: string; movieID: string }) {
@@ -215,5 +218,84 @@ export class UserRepository {
       userReview.reviews.filter((review) => review.movieID === Number(movieID)),
     );
     return movieReviews;
+  }
+
+  async getSimilarMovies({ movieID }: { movieID: string }) {
+    const movie = await this.movieModel.findOne({ tmdb_id: Number(movieID) });
+    if (!movie) {
+      throw new Error('Movie not found');
+    }
+    const genreIds = movie.genres.map((genre) => genre.id);
+
+    const similarMovies = await this.movieModel.aggregate([
+      {
+        $match: {
+          genres: { $elemMatch: { id: { $in: genreIds } } },
+          _id: { $ne: movie._id },
+        },
+      },
+      {
+        $addFields: {
+          matchingGenresCount: {
+            $size: {
+              $filter: {
+                input: '$genres',
+                as: 'genre',
+                cond: { $in: ['$$genre.id', genreIds] },
+              },
+            },
+          },
+        },
+      },
+      {
+        $sort: { matchingGenresCount: -1 },
+      },
+      {
+        $limit: 20,
+      },
+    ]);
+    return similarMovies;
+  }
+
+  async getSimilarMoviesBySearchHistory({ userID }: { userID: string }) {
+    // Step 1: Lấy lịch sử tìm kiếm của user
+    const searchHistories = await this.searchHistoryModel
+      .find({ userID })
+      .sort({ searchTimestamp: -1 })
+      .limit(10)
+      .exec();
+
+    if (!searchHistories.length) {
+      return [];
+    }
+
+    // Step 2: Tổng hợp các từ khóa từ lịch sử tìm kiếm
+    const queries = searchHistories.map((history) => history.queryText);
+    const combinedQuery = queries.join(' ');
+
+    return this.movieModel
+      .aggregate([
+        {
+          $match: {
+            $text: {
+              $search: combinedQuery,
+            },
+          },
+        },
+        {
+          $addFields: {
+            score: { $meta: 'textScore' },
+          },
+        },
+        {
+          $sort: {
+            score: -1,
+          },
+        },
+        {
+          $limit: 20,
+        },
+      ])
+      .exec();
   }
 }
