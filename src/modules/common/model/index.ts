@@ -19,3 +19,8 @@ export { Favorite, FavoriteSchema, FavoriteDocument } from './favorites.schema';
 
 export { Rating, RatingSchema, RatingDocument } from './rating.schema';
 export { Review, ReviewSchema, ReviewDocument } from './reviews.schema';
+export {
+  SearchHistory,
+  SearchHistorySchema,
+  SearchHistoryDocument,
+} from './search_history.schema';

@@ -224,4 +224,10 @@ export class Movie {
 export { Credits };
 
 export const MovieSchema = SchemaFactory.createForClass(Movie);
+MovieSchema.index({
+  original_title: 'text',
+  overview: 'text',
+  'genres.name': 'text',
+});
+
 export type MovieDocument = HydratedDocument<Movie>;

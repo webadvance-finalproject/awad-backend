@@ -1,7 +1,5 @@
 import { Prop, SchemaFactory, Schema } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
-import { Schema as MongooseSchema } from 'mongoose';
-
 @Schema({ collection: 'search_history' })
 export class SearchHistory {
   @Prop({ type: String, required: true })
