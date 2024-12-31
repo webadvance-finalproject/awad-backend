@@ -30,6 +30,9 @@ export class People {
   homepage!: string;
 
   @Prop()
+  id!: number;
+
+  @Prop()
   imdb_id!: string;
 
   @Prop()

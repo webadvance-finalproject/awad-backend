@@ -1,8 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 
-import { Movie } from './movie.schema';
-
 @Schema({ collection: 'movies_genres' })
 export class Genre {
   @Prop()
@@ -11,8 +9,8 @@ export class Genre {
   @Prop()
   name!: string;
 
-  @Prop(() => [Movie])
-  movies!: Movie[];
+  @Prop()
+  tmdb_id: string;
 }
 
 export type GenreDocument = HydratedDocument<Genre>;
