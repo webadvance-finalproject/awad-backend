@@ -20,6 +20,11 @@ export class UserService {
     return await this.userRepository.getFavorites({ movieID, userID });
   }
 
+  // Note: naming not natural because getFavorites is already defined
+  async getFavoriteList({ userID }: { userID: string }) {
+    return await this.userRepository.getFavoriteList({ userID });
+  }
+
   async addWatchlist(addWatchlistData: UserMovieDto) {
     return await this.userRepository.addWatchlist({ ...addWatchlistData });
   }
@@ -28,6 +33,10 @@ export class UserService {
     return await this.userRepository.removeWatchlist({
       ...removeWatchlistData,
     });
+  }
+
+  async getWatchlists({ userID }: { userID: string }) {
+    return await this.userRepository.getWatchlists({ userID });
   }
 
   async getWatchlist({ movieID, userID }: { movieID: string; userID: string }) {
@@ -54,6 +63,10 @@ export class UserService {
 
   async getRating({ movieID, userID }: { movieID: string; userID: string }) {
     return await this.userRepository.getRating({ movieID, userID });
+  }
+
+  async getRatings({ userID }: { userID: string }) {
+    return await this.userRepository.getRatings({ userID });
   }
 
   async addReview(user: UserDto, review: UserReviewDto) {

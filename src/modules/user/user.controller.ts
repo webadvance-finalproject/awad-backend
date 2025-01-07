@@ -86,6 +86,22 @@ export class UserController {
     }
   }
 
+  // Note: naming not natural because getFavorites is already defined
+  @Get('/favorite')
+  @HttpCode(HttpStatus.OK)
+  async getFavoriteList(@UserDecorator('uid') userID: string) {
+    try {
+      const favorites = await this.userService.getFavoriteList({ userID });
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Favorites retrieved successfully',
+        data: { favorites },
+      };
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
   @Post('/watchlist')
   @HttpCode(HttpStatus.CREATED)
   async addWatchlist(
@@ -102,6 +118,21 @@ export class UserController {
         statusCode: HttpStatus.CREATED,
         message: 'Create Watchlist successfully',
         data: { createWatchlist },
+      };
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @Get('/watchlist')
+  @HttpCode(HttpStatus.OK)
+  async getWatchlists(@UserDecorator('uid') userID: string) {
+    try {
+      const watchlists = await this.userService.getWatchlists({ userID });
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Watchlists retrieved successfully',
+        data: { watchlists },
       };
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
@@ -163,6 +194,21 @@ export class UserController {
         statusCode: HttpStatus.CREATED,
         message: 'Create Rating successfully',
         data: { createRating },
+      };
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @Get('/rating')
+  @HttpCode(HttpStatus.OK)
+  async getRatings(@UserDecorator('uid') userID: string) {
+    try {
+      const ratings = await this.userService.getRatings({ userID });
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Ratings retrieved successfully',
+        data: { ratings },
       };
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
