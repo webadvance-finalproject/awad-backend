@@ -64,6 +64,35 @@ export class UserRepository {
     return !!favorite;
   }
 
+  // Note: naming not natural because getFavorites is already defined
+  async getFavoriteList({ userID }: { userID: string }) {
+    const userFavoriteList = await this.favoriteModel.aggregate([
+      { $match: { userID } }, // Lọc theo userID
+      { $unwind: '$movies' }, // Mở mảng movies thành từng đối tượng riêng biệt
+      {
+        $lookup: {
+          from: 'movies', // Tên collection của movies
+          localField: 'movies.tmdb_id', // Trường để nối với collection movies
+          foreignField: 'tmdb_id', // Trường của movies để nối
+          as: 'movieDetails', // Tên của trường chứa kết quả nối
+        },
+      },
+      { $unwind: '$movieDetails' }, // Mở mảng movieDetails thành một đối tượng duy nhất
+      {
+        $project: {
+          _id: 0, // Không hiển thị _id của favorite
+          movie: '$movieDetails', // Chỉ lấy thông tin movie từ kết quả lookup
+        },
+      },
+    ]);
+
+    if (!userFavoriteList.length) {
+      throw new Error('Favorite not found');
+    }
+
+    return userFavoriteList;
+  }
+
   async addWatchlist({ userID, movieID }: { userID: string; movieID: string }) {
     const watchlist = await this.watchlistModel.findOne({ userID });
     const movie = await this.movieModel.findOne({ id: Number(movieID) });

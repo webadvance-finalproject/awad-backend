@@ -86,6 +86,21 @@ export class UserController {
     }
   }
 
+  @Get('/favorite')
+  @HttpCode(HttpStatus.OK)
+  async getFavoriteList(@UserDecorator('uid') userID: string) {
+    try {
+      const favorites = await this.userService.getFavoriteList({ userID });
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Favorites retrieved successfully',
+        data: { favorites },
+      };
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
   @Post('/watchlist')
   @HttpCode(HttpStatus.CREATED)
   async addWatchlist(

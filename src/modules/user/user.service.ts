@@ -20,6 +20,10 @@ export class UserService {
     return await this.userRepository.getFavorites({ movieID, userID });
   }
 
+  async getFavoriteList({ userID }: { userID: string }) {
+    return await this.userRepository.getFavoriteList({ userID });
+  }
+
   async addWatchlist(addWatchlistData: UserMovieDto) {
     return await this.userRepository.addWatchlist({ ...addWatchlistData });
   }
