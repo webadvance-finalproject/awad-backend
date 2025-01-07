@@ -86,6 +86,7 @@ export class UserController {
     }
   }
 
+  // Note: naming not natural because getFavorites is already defined
   @Get('/favorite')
   @HttpCode(HttpStatus.OK)
   async getFavoriteList(@UserDecorator('uid') userID: string) {

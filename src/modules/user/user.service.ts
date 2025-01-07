@@ -20,6 +20,7 @@ export class UserService {
     return await this.userRepository.getFavorites({ movieID, userID });
   }
 
+  // Note: naming not natural because getFavorites is already defined
   async getFavoriteList({ userID }: { userID: string }) {
     return await this.userRepository.getFavoriteList({ userID });
   }
