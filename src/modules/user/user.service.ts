@@ -56,6 +56,10 @@ export class UserService {
     return await this.userRepository.getRating({ movieID, userID });
   }
 
+  async getRatings({ userID }: { userID: string }) {
+    return await this.userRepository.getRatings({ userID });
+  }
+
   async addReview(user: UserDto, review: UserReviewDto) {
     return await this.userRepository.addReview(user, review);
   }

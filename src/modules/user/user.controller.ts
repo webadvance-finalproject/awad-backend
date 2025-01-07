@@ -169,6 +169,21 @@ export class UserController {
     }
   }
 
+  @Get('/rating')
+  @HttpCode(HttpStatus.OK)
+  async getRatings(@UserDecorator('uid') userID: string) {
+    try {
+      const ratings = await this.userService.getRatings({ userID });
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Ratings retrieved successfully',
+        data: { ratings },
+      };
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
   @Get('/rating/:movieID')
   @HttpCode(HttpStatus.OK)
   async getRating(

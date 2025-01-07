@@ -188,6 +188,14 @@ export class UserRepository {
     return rating;
   }
 
+  async getRatings({ userID }: { userID: string }) {
+    const userRating = await this.ratingModel.findOne({ userID });
+    if (!userRating) {
+      throw new Error('Rating not found');
+    }
+    return userRating.ratings;
+  }
+
   async addReview(user: UserDto, review: UserReviewDto) {
     const userReview = await this.reviewModel.findOne({ userID: user.uid });
     const movie = await this.movieModel.findOne({ id: Number(review.movieID) });
