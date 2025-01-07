@@ -30,6 +30,10 @@ export class UserService {
     });
   }
 
+  async getWatchlists({ userID }: { userID: string }) {
+    return await this.userRepository.getWatchlists({ userID });
+  }
+
   async getWatchlist({ movieID, userID }: { movieID: string; userID: string }) {
     return await this.userRepository.getWatchlist({ movieID, userID });
   }

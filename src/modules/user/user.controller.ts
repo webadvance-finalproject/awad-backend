@@ -108,6 +108,21 @@ export class UserController {
     }
   }
 
+  @Get('/watchlist')
+  @HttpCode(HttpStatus.OK)
+  async getWatchlists(@UserDecorator('uid') userID: string) {
+    try {
+      const watchlists = await this.userService.getWatchlists({ userID });
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Watchlists retrieved successfully',
+        data: { watchlists },
+      };
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
   @Delete('/watchlist/:movieID')
   @HttpCode(HttpStatus.OK)
   async removeWatchlist(

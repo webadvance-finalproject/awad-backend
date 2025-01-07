@@ -91,6 +91,34 @@ export class UserRepository {
     );
   }
 
+  async getWatchlists({ userID }: { userID: string }) {
+    const userWatchLists = await this.watchlistModel.aggregate([
+      { $match: { userID } }, // Lọc theo userID
+      { $unwind: '$movies' }, // Mở mảng movies thành từng đối tượng riêng biệt
+      {
+        $lookup: {
+          from: 'movies', // Tên collection của movies
+          localField: 'movies.tmdb_id', // Trường để nối với collection movies
+          foreignField: 'tmdb_id', // Trường của movies để nối
+          as: 'movieDetails', // Tên của trường chứa kết quả nối
+        },
+      },
+      { $unwind: '$movieDetails' }, // Mở mảng movieDetails thành một đối tượng duy nhất
+      {
+        $project: {
+          _id: 0, // Không hiển thị _id của watchlist
+          movie: '$movieDetails', // Chỉ lấy thông tin movie từ kết quả lookup
+        },
+      },
+    ]);
+
+    if (!userWatchLists.length) {
+      throw new Error('Watchlist not found');
+    }
+
+    return userWatchLists;
+  }
+
   async getWatchlist({ movieID, userID }: { movieID: string; userID: string }) {
     const watchlist = await this.watchlistModel.findOne({
       userID,
@@ -189,11 +217,32 @@ export class UserRepository {
   }
 
   async getRatings({ userID }: { userID: string }) {
-    const userRating = await this.ratingModel.findOne({ userID });
-    if (!userRating) {
-      throw new Error('Rating not found');
+    const ratingsWithMovies = await this.ratingModel.aggregate([
+      { $match: { userID } },
+      { $unwind: '$ratings' },
+      {
+        $lookup: {
+          from: 'movies', // Tên collection của movieModel
+          localField: 'ratings.movieID',
+          foreignField: 'tmdb_id',
+          as: 'movieDetails',
+        },
+      },
+      { $unwind: '$movieDetails' }, // Loại bỏ mảng, chỉ lấy một đối tượng movie
+      {
+        $project: {
+          _id: 0,
+          rating: '$ratings.rating',
+          movie: '$movieDetails',
+        },
+      },
+    ]);
+
+    if (!ratingsWithMovies.length) {
+      throw new Error('Ratings not found');
     }
-    return userRating.ratings;
+
+    return ratingsWithMovies;
   }
 
   async addReview(user: UserDto, review: UserReviewDto) {
