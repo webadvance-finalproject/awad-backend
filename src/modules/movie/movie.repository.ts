@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { Model } from 'mongoose';
 import { Genre, Movie, People } from '../common/model';
 import { GetMovieDetailDto } from './dto';
 
@@ -17,7 +17,7 @@ export class MovieRepository {
   }
 
   async findByObjectID(movieID: string): Promise<Movie> {
-    return await this.movieModel.findOne({ _id: new Types.ObjectId(movieID) });
+    return await this.movieModel.findOne({ _id: movieID });
   }
   async findActorById(actorID: string): Promise<People> {
     return await this.peopleModel.findOne({ id: Number(actorID) }).exec();
@@ -115,5 +115,21 @@ export class MovieRepository {
     return await this.genreModel
       .find({ id: { $in: genreIDs.map((id) => Number(id)) } })
       .exec();
+  }
+
+  // TODO: trending chưa biết làm sao
+  async findTrendingMoviesToday(page: number): Promise<Movie[]> {
+    const skip = (page - 1) * 6;
+    return await this.movieModel.find().skip(skip).limit(6).exec();
+  }
+  async findTrendingMoviesThisWeek(page: number): Promise<Movie[]> {
+    const skip = (page - 1) * 6;
+    return await this.movieModel.find().skip(skip).limit(6).exec();
+  }
+  async countTrendingMoviesToday(): Promise<number> {
+    return await this.movieModel.countDocuments().exec();
+  }
+  async countTrendingMoviesThisWeek(): Promise<number> {
+    return await this.movieModel.countDocuments().exec();
   }
 }

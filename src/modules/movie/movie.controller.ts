@@ -84,21 +84,21 @@ export class MovieController {
     }
   }
 
-  @Get('trending/day')
+  @Get('trending/today')
   @HttpCode(HttpStatus.OK)
-  async getTrendingMoviesByDay(@Query('page') page?: number) {
+  async getTrendingMoviesToday(@Query('page') page?: number) {
     try {
-      return await this.movieService.getTrendingMoviesByDay(page);
+      return await this.movieService.getTrendingMoviesToday(page);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
-  @Get('trending/week')
+  @Get('trending/this-week')
   @HttpCode(HttpStatus.OK)
-  async getTrendingMoviesByWeek(@Query('page') page?: number) {
+  async getTrendingMoviesThisWeek(@Query('page') page?: number) {
     try {
-      return await this.movieService.getTrendingMoviesByWeek(page);
+      return await this.movieService.getTrendingMoviesThisWeek(page);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
