@@ -10,6 +10,7 @@ export const configProvider = {
       API_PORT: Joi.number().required(),
       JWT_SECRET: Joi.string().required(),
       API_KEY: Joi.string().required(),
+      GEMENI_API_KEY: Joi.string().required(),
     });
 
     const result = validationSchema.validate(env);

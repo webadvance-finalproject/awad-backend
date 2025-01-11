@@ -3,6 +3,7 @@ import { GetMovieDetailDto } from './dto';
 import * as MovieUtils from './utils';
 import { Config, Genre, Movie, People } from '../common/model';
 import { MovieRepository } from './movie.repository';
+import axios from 'axios';
 
 @Injectable()
 export class MovieService {
@@ -37,7 +38,11 @@ export class MovieService {
   }
 
   public async searchMovie(keyword: string, page: number, limit: number) {
-    const movies = await this.movieRepository.findByKeywordWithPagination(keyword, page, limit);
+    const movies = await this.movieRepository.findByKeywordWithPagination(
+      keyword,
+      page,
+      limit,
+    );
     return movies;
   }
 
@@ -47,7 +52,11 @@ export class MovieService {
   }
 
   public async searchActor(keyword: string, page: number, limit: number) {
-    const actors = await this.movieRepository.findActorByKeywordWithPagination(keyword, page, limit);
+    const actors = await this.movieRepository.findActorByKeywordWithPagination(
+      keyword,
+      page,
+      limit,
+    );
     return actors;
   }
   public async getActorByIDs(actorIDs: string[]): Promise<People[]> {
@@ -78,8 +87,49 @@ export class MovieService {
     minYear: number = 0,
     page: number = 1,
     limit: number = 20,
-  ): Promise<{ results: Movie[], total_pages: number }>  {
-    const movies = await this.movieRepository.searchWithFilter(keyword, actors, genres, minRating, maxRating, minYear, page, limit);
+  ): Promise<{ results: Movie[]; total_pages: number }> {
+    const movies = await this.movieRepository.searchWithFilter(
+      keyword,
+      actors,
+      genres,
+      minRating,
+      maxRating,
+      minYear,
+      page,
+      limit,
+    );
     return movies;
+  }
+
+  async searchByLlm({ query }: { query: string }) {
+    const gemeniApiKey = this.configService.GEMENI_API_KEY;
+    try {
+      const result = await axios
+        .post(
+          `https://awd-llm.azurewebsites.net/navigate/?llm_api_key=${gemeniApiKey}&query=${query}`,
+        )
+        .then((response) => {
+          return response.data;
+        })
+        .catch((error) => {
+          throw error;
+        });
+      if (result && result.data && result.data.params) {
+        const movies = result.data.params.movie_ids;
+        const movie_ids = [];
+        if (movies) {
+          for (const movie of movies) {
+            const movieData = await this.movieRepository.findByObjectID(movie);
+            if (movieData) {
+              movie_ids.push(movieData.tmdb_id);
+            }
+          }
+        }
+        result.data.params.movie_ids = movie_ids;
+      }
+      return result;
+    } catch (error) {
+      throw error;
+    }
   }
 }

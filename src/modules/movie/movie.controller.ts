@@ -18,7 +18,7 @@ import { AuthFirebaseGuard } from '../common/guards';
 import { CustomParseArrayPipe } from '../common/pipes/custom-parse-array.pipe';
 @Controller('movie')
 export class MovieController {
-  constructor(private movieService: MovieService) { }
+  constructor(private movieService: MovieService) {}
 
   @Get('search')
   // @UseGuards(AuthFirebaseGuard)
@@ -34,7 +34,16 @@ export class MovieController {
     @Query('limit') limit,
   ) {
     try {
-      return await this.movieService.searchWithFilter(keyword, actors, genres, minRating, maxRating, minYear, page, limit);
+      return await this.movieService.searchWithFilter(
+        keyword,
+        actors,
+        genres,
+        minRating,
+        maxRating,
+        minYear,
+        page,
+        limit,
+      );
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -54,7 +63,9 @@ export class MovieController {
   @Get('/genres/find')
   @UseGuards(AuthFirebaseGuard)
   @HttpCode(HttpStatus.OK)
-  async findGenresByIds(@Query('ids', new CustomParseArrayPipe()) genreIDs: string[]) {
+  async findGenresByIds(
+    @Query('ids', new CustomParseArrayPipe()) genreIDs: string[],
+  ) {
     try {
       return await this.movieService.findGenresByManyID(genreIDs);
     } catch (error) {
@@ -93,8 +104,6 @@ export class MovieController {
     }
   }
 
-
-
   @Get('actor/search')
   @HttpCode(HttpStatus.OK)
   async searchActor(
@@ -107,7 +116,7 @@ export class MovieController {
       return {
         page,
         results: rs,
-      }
+      };
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -115,14 +124,16 @@ export class MovieController {
 
   @Get('actor/find')
   @HttpCode(HttpStatus.OK)
-  async findActorsByIds(@Query('ids', new CustomParseArrayPipe()) actorIDs: string[]) {
+  async findActorsByIds(
+    @Query('ids', new CustomParseArrayPipe()) actorIDs: string[],
+  ) {
     try {
       return await this.movieService.getActorByIDs(actorIDs);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
-  
+
   @Get('actor/:id')
   @HttpCode(HttpStatus.OK)
   async getActorDetail(@Param('id') actorID: string) {
@@ -138,6 +149,21 @@ export class MovieController {
   async getMovieCast(@Param('id') movieID: GetMovieDetailDto) {
     try {
       return await this.movieService.getMovieCast(movieID);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @Post('llm')
+  @HttpCode(HttpStatus.OK)
+  async searchByLLM(@Body('query') query: string) {
+    try {
+      const searchByLlmData = await this.movieService.searchByLlm({ query });
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'search by llm successfully',
+        data: { searchByLlmData },
+      };
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
