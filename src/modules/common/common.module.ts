@@ -1,9 +1,5 @@
 import { Module } from '@nestjs/common';
-import {
-  configProvider,
-  PrismaService,
-  FirebaseAuthService,
-} from './providers';
+import { configProvider, FirebaseAuthService } from './providers';
 import { CacheModule } from '@nestjs/cache-manager';
 import {
   Movie,
@@ -23,7 +19,7 @@ import { MongooseModule } from '@nestjs/mongoose';
       { name: SearchHistory.name, schema: SearchHistorySchema },
     ]),
   ],
-  providers: [configProvider, PrismaService, FirebaseAuthService],
-  exports: [configProvider, PrismaService, FirebaseAuthService],
+  providers: [configProvider, FirebaseAuthService],
+  exports: [configProvider, FirebaseAuthService],
 })
 export class CommonModule {}
