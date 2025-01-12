@@ -117,19 +117,41 @@ export class MovieRepository {
       .exec();
   }
 
-  // TODO: trending chưa biết làm sao
   async findTrendingMoviesToday(page: number): Promise<Movie[]> {
     const skip = (page - 1) * 6;
-    return await this.movieModel.find().skip(skip).limit(6).exec();
+    return await this.movieModel
+      .find({
+        popularity: { $gt: 200 },
+      })
+      .skip(skip)
+      .limit(6)
+      .exec();
   }
+
   async findTrendingMoviesThisWeek(page: number): Promise<Movie[]> {
     const skip = (page - 1) * 6;
-    return await this.movieModel.find().skip(skip).limit(6).exec();
+    return await this.movieModel
+      .find({
+        popularity: { $lt: 200 },
+      })
+      .skip(skip)
+      .limit(6)
+      .exec();
   }
+
   async countTrendingMoviesToday(): Promise<number> {
-    return await this.movieModel.countDocuments().exec();
+    return await this.movieModel
+      .countDocuments({
+        popularity: { $gt: 200 },
+      })
+      .exec();
   }
+
   async countTrendingMoviesThisWeek(): Promise<number> {
-    return await this.movieModel.countDocuments().exec();
+    return await this.movieModel
+      .countDocuments({
+        popularity: { $lt: 200 },
+      })
+      .exec();
   }
 }
