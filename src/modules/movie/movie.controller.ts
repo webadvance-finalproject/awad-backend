@@ -10,7 +10,6 @@ import {
   HttpException,
   Query,
   ParseIntPipe,
-  ParseArrayPipe,
 } from '@nestjs/common';
 import { GetMovieDetailDto } from './dto';
 import { MovieService } from './movie.service';
@@ -73,6 +72,26 @@ export class MovieController {
     }
   }
 
+  @Get('lastest-trailers')
+  @HttpCode(HttpStatus.OK)
+  async getLastestTrailers(@Query('page') page?: number) {
+    try {
+      return await this.movieService.getLastestTrailers(page);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @Get('popular')
+  @HttpCode(HttpStatus.OK)
+  async getPopularMovies(@Query('page') page?: number) {
+    try {
+      return await this.movieService.getPopularMovies(page);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
   @Get(':id')
   @UseGuards(AuthFirebaseGuard)
   @HttpCode(HttpStatus.OK)
@@ -84,21 +103,21 @@ export class MovieController {
     }
   }
 
-  @Get('trending/day')
+  @Get('trending/today')
   @HttpCode(HttpStatus.OK)
-  async getTrendingMoviesByDay(@Query('page') page?: number) {
+  async getTrendingMoviesToday(@Query('page') page?: number) {
     try {
-      return await this.movieService.getTrendingMoviesByDay(page);
+      return await this.movieService.getTrendingMoviesToday(page);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
-  @Get('trending/week')
+  @Get('trending/this-week')
   @HttpCode(HttpStatus.OK)
-  async getTrendingMoviesByWeek(@Query('page') page?: number) {
+  async getTrendingMoviesThisWeek(@Query('page') page?: number) {
     try {
-      return await this.movieService.getTrendingMoviesByWeek(page);
+      return await this.movieService.getTrendingMoviesThisWeek(page);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }

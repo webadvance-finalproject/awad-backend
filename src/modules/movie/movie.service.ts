@@ -1,6 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { GetMovieDetailDto } from './dto';
-import * as MovieUtils from './utils';
 import { Config, Genre, Movie, People } from '../common/model';
 import { MovieRepository } from './movie.repository';
 import axios from 'axios';
@@ -16,20 +15,50 @@ export class MovieService {
     @Inject('CONFIG') private readonly configService: Config,
     private readonly movieRepository: MovieRepository,
   ) {}
-  public async getTrendingMoviesByDay(page: number): Promise<boolean> {
-    const movies = await MovieUtils.fetchTrendingMoviesByDayFromExternalAPI({
-      token: this.configService.API_KEY,
+
+  public async getTrendingMoviesToday(page: number) {
+    const movies = await this.movieRepository.findTrendingMoviesToday(page);
+    const totalCount = await this.movieRepository.countTrendingMoviesToday();
+    const totalPages = Math.ceil(totalCount / 6); // Giả sử mỗi trang có 6 phim
+    return {
+      results: movies,
       page,
-    });
-    return movies;
+      total_pages: totalPages,
+    };
   }
 
-  public async getTrendingMoviesByWeek(page: number): Promise<boolean> {
-    const movies = await MovieUtils.fetchTrendingMoviesByWeekFromExternalAPI({
-      token: this.configService.API_KEY,
+  public async getTrendingMoviesThisWeek(page: number) {
+    const movies = await this.movieRepository.findTrendingMoviesThisWeek(page);
+    const totalCount = await this.movieRepository.countTrendingMoviesThisWeek();
+    const totalPages = Math.ceil(totalCount / 6); // Giả sử mỗi trang có 6 phim
+    return {
+      results: movies,
       page,
-    });
-    return movies;
+      total_pages: totalPages,
+    };
+  }
+
+  public async getPopularMovies(page: number) {
+    const movies = await this.movieRepository.findPopularMovies(page);
+    const totalCount = await this.movieRepository.countPopularMovies();
+    const totalPages = Math.ceil(totalCount / 6);
+    return {
+      results: movies,
+      page,
+      total_pages: totalPages,
+    };
+  }
+
+  public async getLastestTrailers(page: number) {
+    const res = await this.movieRepository.findLatestTrailers(page);
+    const trailers = res.resTrailers;
+    const totalCount = res.countAllTrailers;
+    const totalPages = Math.ceil(totalCount / 6);
+    return {
+      results: trailers,
+      page,
+      total_pages: totalPages,
+    };
   }
 
   public async getMovieDetail(movieID: GetMovieDetailDto): Promise<Movie> {
