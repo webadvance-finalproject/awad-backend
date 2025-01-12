@@ -174,4 +174,23 @@ export class MovieRepository {
       })
       .exec();
   }
+
+  async findLatestTrailers(page: number) {
+    const skip = (page - 1) * 3;
+    const allTrailersRaw = await this.movieModel
+      .find({
+        trailers: { $ne: null },
+      })
+      .sort({ 'trailers.published_at': -1 })
+      .select('trailers')
+      .exec();
+
+    const allTrailers = allTrailersRaw.map((movie) => movie.trailers).flat();
+    const countAllTrailers = allTrailers.length;
+    const resTrailers = allTrailers.slice(skip, skip + 6);
+    return {
+      resTrailers,
+      countAllTrailers,
+    };
+  }
 }

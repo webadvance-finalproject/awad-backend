@@ -72,11 +72,20 @@ export class MovieController {
     }
   }
 
+  @Get('lastest-trailers')
+  @HttpCode(HttpStatus.OK)
+  async getLastestTrailers(@Query('page') page?: number) {
+    try {
+      return await this.movieService.getLastestTrailers(page);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
   @Get('popular')
   @HttpCode(HttpStatus.OK)
   async getPopularMovies(@Query('page') page?: number) {
     try {
-      console.log('đã vào được controller');
       return await this.movieService.getPopularMovies(page);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);

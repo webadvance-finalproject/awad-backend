@@ -49,6 +49,18 @@ export class MovieService {
     };
   }
 
+  public async getLastestTrailers(page: number) {
+    const res = await this.movieRepository.findLatestTrailers(page);
+    const trailers = res.resTrailers;
+    const totalCount = res.countAllTrailers;
+    const totalPages = Math.ceil(totalCount / 6);
+    return {
+      results: trailers,
+      page,
+      total_pages: totalPages,
+    };
+  }
+
   public async getMovieDetail(movieID: GetMovieDetailDto): Promise<Movie> {
     const movie = await this.movieRepository.findById(movieID);
     return movie;
