@@ -154,4 +154,24 @@ export class MovieRepository {
       })
       .exec();
   }
+
+  async findPopularMovies(page: number): Promise<Movie[]> {
+    const skip = (page - 1) * 6;
+    return await this.movieModel
+      .find({
+        popularity: { $gt: 200 },
+      })
+      .sort({ popularity: -1 })
+      .skip(skip)
+      .limit(6)
+      .exec();
+  }
+
+  async countPopularMovies(): Promise<number> {
+    return await this.movieModel
+      .countDocuments({
+        popularity: { $gt: 200 },
+      })
+      .exec();
+  }
 }

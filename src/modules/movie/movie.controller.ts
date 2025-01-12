@@ -10,7 +10,6 @@ import {
   HttpException,
   Query,
   ParseIntPipe,
-  ParseArrayPipe,
 } from '@nestjs/common';
 import { GetMovieDetailDto } from './dto';
 import { MovieService } from './movie.service';
@@ -68,6 +67,17 @@ export class MovieController {
   ) {
     try {
       return await this.movieService.findGenresByManyID(genreIDs);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @Get('popular')
+  @HttpCode(HttpStatus.OK)
+  async getPopularMovies(@Query('page') page?: number) {
+    try {
+      console.log('đã vào được controller');
+      return await this.movieService.getPopularMovies(page);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }

@@ -38,6 +38,17 @@ export class MovieService {
     };
   }
 
+  public async getPopularMovies(page: number) {
+    const movies = await this.movieRepository.findPopularMovies(page);
+    const totalCount = await this.movieRepository.countPopularMovies();
+    const totalPages = Math.ceil(totalCount / 6);
+    return {
+      results: movies,
+      page,
+      total_pages: totalPages,
+    };
+  }
+
   public async getMovieDetail(movieID: GetMovieDetailDto): Promise<Movie> {
     const movie = await this.movieRepository.findById(movieID);
     return movie;
