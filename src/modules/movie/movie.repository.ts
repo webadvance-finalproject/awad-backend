@@ -187,7 +187,7 @@ export class MovieRepository {
 
     const allTrailers = allTrailersRaw.map((movie) => movie.trailers).flat();
     const countAllTrailers = allTrailers.length;
-    const resTrailers = allTrailers.slice(skip, skip + 6);
+    const resTrailers = allTrailers.slice(skip, skip + 3);
     return {
       resTrailers,
       countAllTrailers,
