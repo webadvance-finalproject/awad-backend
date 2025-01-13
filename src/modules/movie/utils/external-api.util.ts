@@ -71,6 +71,7 @@ export async function searchMovieFromExternalAPI(options: {
           Authorization: `Bearer ${options.token}`,
         },
       },
+
     );
     return response.data;
   } catch (error) {
