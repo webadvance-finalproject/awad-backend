@@ -20,7 +20,6 @@ export class MovieController {
   constructor(private movieService: MovieService) {}
 
   @Get('search')
-  // @UseGuards(AuthFirebaseGuard)
   @HttpCode(HttpStatus.OK)
   async searchMovie(
     @Query('keyword') keyword,
@@ -49,7 +48,6 @@ export class MovieController {
   }
 
   @Get('/genres')
-  @UseGuards(AuthFirebaseGuard)
   @HttpCode(HttpStatus.OK)
   async getAllGenre() {
     try {
@@ -60,7 +58,6 @@ export class MovieController {
   }
 
   @Get('/genres/find')
-  @UseGuards(AuthFirebaseGuard)
   @HttpCode(HttpStatus.OK)
   async findGenresByIds(
     @Query('ids', new CustomParseArrayPipe()) genreIDs: string[],
@@ -93,7 +90,6 @@ export class MovieController {
   }
 
   @Get(':id')
-  @UseGuards(AuthFirebaseGuard)
   @HttpCode(HttpStatus.OK)
   async getMovieDetail(@Param('id') movieID: GetMovieDetailDto) {
     try {
