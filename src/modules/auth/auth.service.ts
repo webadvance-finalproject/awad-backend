@@ -4,11 +4,10 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { AuthDto } from './dtos';
-import { PrismaService } from '../common/providers';
 
 @Injectable()
 export class AuthService {
-  public constructor(private readonly prismaService: PrismaService) {}
+  public constructor() {}
 
   /**
    * Signin Application
