@@ -30,6 +30,7 @@ export class MovieController {
     @Query('minYear') minYear,
     @Query('page') page,
     @Query('limit') limit,
+    @Query('userID') userID,
   ) {
     try {
       return await this.movieService.searchWithFilter(
@@ -41,6 +42,7 @@ export class MovieController {
         minYear,
         page,
         limit,
+        userID,
       );
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);

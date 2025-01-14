@@ -8,6 +8,8 @@ import {
   PeopleSchema,
   Genre,
   GenreSchema,
+  SearchHistory,
+  SearchHistorySchema,
 } from './../common/model';
 import { MovieController } from './movie.controller';
 import { MovieService } from './movie.service';
@@ -20,9 +22,10 @@ import { MovieRepository } from './movie.repository';
       { name: Movie.name, schema: MovieSchema },
       { name: People.name, schema: PeopleSchema },
       { name: Genre.name, schema: GenreSchema },
+      { name: SearchHistory.name, schema: SearchHistorySchema },
     ]),
   ],
   controllers: [MovieController],
   providers: [MovieService, MovieRepository],
 })
-export class MovieModule {}
+export class MovieModule { }

@@ -116,6 +116,7 @@ export class MovieService {
     minYear: number = 0,
     page: number = 1,
     limit: number = 20,
+    userID: string = null,
   ): Promise<{ results: Movie[]; total_pages: number }> {
     const movies = await this.movieRepository.searchWithFilter(
       keyword,
@@ -127,6 +128,9 @@ export class MovieService {
       page,
       limit,
     );
+    if (userID) {
+      await this.movieRepository.addToSearchHistory({userID, queryText: keyword, resultsCount: movies?.results?.length})
+    }
     return movies;
   }
 

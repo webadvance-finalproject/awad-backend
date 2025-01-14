@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Genre, Movie, People } from '../common/model';
+import { Genre, Movie, People, SearchHistory } from '../common/model';
 import { GetMovieDetailDto } from './dto';
 
 @Injectable()
@@ -10,6 +10,7 @@ export class MovieRepository {
     @InjectModel(Movie.name) private movieModel: Model<Movie>,
     @InjectModel(People.name) private peopleModel: Model<People>,
     @InjectModel(Genre.name) private genreModel: Model<Genre>,
+    @InjectModel(SearchHistory.name) private searchHistoryModel: Model<SearchHistory>,
   ) {}
 
   async findById(movieID: GetMovieDetailDto): Promise<Movie> {
@@ -192,5 +193,10 @@ export class MovieRepository {
       resTrailers,
       countAllTrailers,
     };
+  }
+
+  async addToSearchHistory({userID, queryText, resultsCount = 0}) {
+    const searchTimestamp = new Date().toLocaleDateString();
+    return await this.searchHistoryModel.create({userID, queryText, searchTimestamp, resultsCount});
   }
 }
