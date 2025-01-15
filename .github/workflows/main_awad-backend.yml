@@ -42,6 +42,9 @@ jobs:
         echo ${{secrets.FIREBASE_ADMIN_CONFIG}} | base64 --decode | jq >> firebase-config.json
         cat firebase-config.json
 
+    - name: 'List'
+      run: ls
+
     - name: Build and push container image to registry
       uses: docker/build-push-action@v3
       with:
