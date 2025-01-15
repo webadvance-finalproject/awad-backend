@@ -27,7 +27,7 @@ jobs:
         password: ${{ secrets.AzureAppService_ContainerPassword_6d2b23c9b6124fbdb42826040ee12246 }}
 
     - name: 'Create env file'
-      working-directory: /usr/src/app
+      working-directory: ./
       run: |
         touch .env
         echo MONGODB_CONNECTION_STRING=${{secrets.MONGODB_CONNECTION_STRING}} >> .env
@@ -38,7 +38,7 @@ jobs:
         cat .env
 
     - name: 'Create firebase admin config'
-      working-directory: /usr/src/app
+      working-directory: ./
       run: |
         touch firebase-config.json
         echo ${{secrets.FIREBASE_ADMIN_CONFIG}} | base64 --decode | jq >> firebase-config.json
