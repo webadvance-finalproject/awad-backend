@@ -7,7 +7,6 @@ WORKDIR /usr/src/app
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
-RUN ls
 
 # Install dependencies
 RUN npm install
@@ -17,6 +16,7 @@ COPY . .
 
 # Build the NestJS application
 RUN npm run build
+RUN ls
 
 # Expose the port the app runs on
 EXPOSE 3000
