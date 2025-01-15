@@ -40,11 +40,12 @@ jobs:
 
     - name: 'List'
       working-directory: ./
-      run: ls
+      run: ls -a
 
     - name: Build and push container image to registry
       uses: docker/build-push-action@v3
       with:
+        context: .
         push: true
         tags: registry0104.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_60a6212d4d3146e69a32b27c7f620e1e }}/registry0104/awad-backend:${{ github.sha }}
         file: ./Dockerfile
