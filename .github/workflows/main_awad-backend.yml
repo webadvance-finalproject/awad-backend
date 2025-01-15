@@ -45,7 +45,7 @@ jobs:
         cat firebase-config.json
 
     - name: 'List'
-      working-directory: /github/workspace
+      working-directory: ./
       run: ls
 
     - name: Build and push container image to registry
