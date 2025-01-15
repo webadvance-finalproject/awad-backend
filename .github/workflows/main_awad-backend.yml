@@ -27,22 +27,16 @@ jobs:
         password: ${{ secrets.AzureAppService_ContainerPassword_6d2b23c9b6124fbdb42826040ee12246 }}
 
     - name: 'Create env file'
-      working-directory: ./
       run: |
-        touch .env
-        echo MONGODB_CONNECTION_STRING=${{secrets.MONGODB_CONNECTION_STRING}} >> .env
-        echo JWT_SECRET=${{secrets.JWT_SECRET}} >> .env
-        echo API_PORT=${{secrets.API_PORT}} >> .env
-        echo API_KEY=${{secrets.API_KEY}} >> .env
-        echo GEMENI_API_KEY=${{secrets.GEMENI_API_KEY}} >> .env
-        cat .env
+        echo MONGODB_CONNECTION_STRING=${{secrets.MONGODB_CONNECTION_STRING}} > ./.env
+        echo JWT_SECRET=${{secrets.JWT_SECRET}} >> ./.env
+        echo API_PORT=${{secrets.API_PORT}} >> ./.env
+        echo API_KEY=${{secrets.API_KEY}} >> ./.env
+        echo GEMENI_API_KEY=${{secrets.GEMENI_API_KEY}} >> ./.env
 
     - name: 'Create firebase admin config'
-      working-directory: ./
       run: |
-        touch firebase-config.json
-        echo ${{secrets.FIREBASE_ADMIN_CONFIG}} | base64 --decode | jq >> firebase-config.json
-        cat firebase-config.json
+        echo ${{secrets.FIREBASE_ADMIN_CONFIG}} | base64 --decode | jq > ./firebase-config.json
 
     - name: 'List'
       working-directory: ./
