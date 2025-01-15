@@ -2,7 +2,7 @@
 FROM node:20
 
 # Create and change to the app directory
-WORKDIR /usr/src/app
+WORKDIR /github/workspace
 
 # Copy package.json and package-lock.json
 COPY package*.json ./
