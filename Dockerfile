@@ -4,11 +4,8 @@ FROM node:20
 # Create and change to the app directory
 WORKDIR /usr/src/app
 
-RUN ls
-
 # Copy package.json and package-lock.json
 COPY package*.json ./
-
 
 # Install dependencies
 RUN npm install
@@ -16,7 +13,6 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
-RUN ls
 # Build the NestJS application
 RUN npm run build
 

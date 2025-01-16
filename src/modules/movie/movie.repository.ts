@@ -56,11 +56,11 @@ export class MovieRepository {
     }
 
     if (actors.length > 0) {
-      filter['credits.cast.id'] = { $in: actors.map((id) => Number(id)) };
+      filter['credits.cast.id'] = { $all: actors.map((id) => Number(id)) };
     }
 
     if (genres.length > 0) {
-      filter['genres.id'] = { $in: genres.map((id) => Number(id)) };
+      filter['genres.id'] = { $all: genres.map((id) => Number(id)) };
     }
 
     const totalCount = await this.movieModel.countDocuments(filter).exec();

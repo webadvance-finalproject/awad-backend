@@ -128,7 +128,7 @@ export class MovieService {
       page,
       limit,
     );
-    if (userID) {
+    if (userID && keyword) {
       await this.movieRepository.addToSearchHistory({userID, queryText: keyword, resultsCount: movies?.results?.length})
     }
     return movies;
